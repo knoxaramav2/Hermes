@@ -11,9 +11,9 @@
         <Menu DockPanel.Dock="Top"
               Background="DarkGray">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" />
-                <MenuItem Header="_Open" />
-                <MenuItem Header="_Save" />
+                <MenuItem Header="_New" Click="NewProject"/>
+                <MenuItem Header="_Open" Click="OpenProject"/>
+                <MenuItem Header="_Save" Click="SaveProject"/>
                 <Separator />
                 <MenuItem Header="_Exit" Click="ExitApplication"/>
             </MenuItem>
