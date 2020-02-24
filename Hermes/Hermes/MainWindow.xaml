@@ -19,7 +19,7 @@
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem Header="_Configure Project">
-                
+
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
@@ -27,12 +27,21 @@
                 <MenuItem Header="_Documentation"/>
             </MenuItem>
         </Menu>
-        <Grid HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="4*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-        </Grid>
+        <TabControl DockPanel.Dock="Left" MinWidth="150" x:Name="LeftTabControl"></TabControl>
+        <TabControl DockPanel.Dock="Right" MinWidth="150" x:Name="RightTabControl"></TabControl>
+        <StatusBar DockPanel.Dock="Bottom" MinHeight="40" x:Name="MainStatusBar" Background="#FFB5CFCB" Height="10" RenderTransformOrigin="0.5,0.5">
+            <StatusBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </StatusBar.RenderTransform>
+            <StatusBarItem Width="265" HorizontalAlignment="Left" Height="15" VerticalAlignment="Center">
+                <ProgressBar Value="100" IsIndeterminate="True" x:Name="ProgressBar" Width="255" VerticalAlignment="Center" HorizontalAlignment="Center" Height="23"/>
+            </StatusBarItem>
+        </StatusBar>
+        <Canvas x:Name="GameCanvasEditor"></Canvas>
     </DockPanel>
 </Window>
