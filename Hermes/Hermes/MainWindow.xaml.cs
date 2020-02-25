@@ -33,7 +33,10 @@ namespace Hermes
             ProjectFileHandler.LoadConfigData();
         }
 
-        
+        public void SerializeControls()
+        {
+
+        }
 
         private void BindComponents()
         {
@@ -41,8 +44,6 @@ namespace Hermes
             _leftTabControl = (TabControl)FindName("LeftTabControl");
             _rightTabControl = (TabControl)FindName("RightTabControl");
             _canvas = (Canvas)FindName("GameCanvasEditor");
-
-            
         }
 
         /* Menu handlers */

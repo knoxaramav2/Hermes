@@ -22,6 +22,11 @@
 
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Editors"/>
+                <Separator/>
+                <MenuItem Header="Build"/>
+            </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Controls">
                     <MenuItem Header="" IsCheckable="True"/>
@@ -38,9 +43,38 @@
             </MenuItem>
         </Menu>
         <TabControl DockPanel.Dock="Left" MinWidth="150" x:Name="LeftTabControl">
-            
+            <TabItem Header="General">
+                
+            </TabItem>
+            <TabItem Header="Maps">
+
+            </TabItem>
         </TabControl>
-        <TabControl DockPanel.Dock="Right" MinWidth="150" x:Name="RightTabControl" Width="356"></TabControl>
+        <TabControl DockPanel.Dock="Right" MinWidth="150" x:Name="RightTabControl" Width="356">
+            <TabItem Header="Top">
+                <Grid>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="Bottom">
+
+            </TabItem>
+            <TabItem Header="Background">
+
+            </TabItem>
+            <TabItem Header="Attributes">
+
+            </TabItem>
+            <TabItem Header="Actors">
+
+            </TabItem>
+            <TabItem Header="Items">
+
+            </TabItem>
+            <TabItem Header="Scripts">
+
+            </TabItem>
+        </TabControl>
         <StatusBar DockPanel.Dock="Bottom" MinHeight="40" x:Name="MainStatusBar" Background="#FFB5CFCB" Height="10" RenderTransformOrigin="0.5,0.5">
             <StatusBar.RenderTransform>
                 <TransformGroup>
