@@ -9,6 +9,8 @@ using System.Windows;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using System.Reflection;
+using System.Xml;
 
 namespace Hermes
 {
@@ -26,9 +28,12 @@ namespace Hermes
         public MainWindow()
         {
             InitializeComponent();
-            ProjectFileHandler.ValidateFileStructure();
             BindComponents();
+            ProjectFileHandler.ValidateFileStructure();
+            ProjectFileHandler.LoadConfigData();
         }
+
+        
 
         private void BindComponents()
         {
@@ -36,8 +41,9 @@ namespace Hermes
             _leftTabControl = (TabControl)FindName("LeftTabControl");
             _rightTabControl = (TabControl)FindName("RightTabControl");
             _canvas = (Canvas)FindName("GameCanvasEditor");
-        }
 
+            
+        }
 
         /* Menu handlers */
 
@@ -84,6 +90,12 @@ namespace Hermes
         private void ExitApplication(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        /***    File     ***/
+        public void ToggleTabView(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

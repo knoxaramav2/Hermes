@@ -22,13 +22,25 @@
 
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Controls">
+                    <MenuItem Header="" IsCheckable="True"/>
+                </MenuItem>
+                <MenuItem Header="_Resources">
+                    <MenuItem Header="Palletes" IsCheckable="True" />
+                    <MenuItem Header="Sprites" IsCheckable="True"/>
+                    <MenuItem Header="" IsCheckable="True"/>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About Hermes"/>
                 <MenuItem Header="_Documentation"/>
             </MenuItem>
         </Menu>
-        <TabControl DockPanel.Dock="Left" MinWidth="150" x:Name="LeftTabControl"></TabControl>
-        <TabControl DockPanel.Dock="Right" MinWidth="150" x:Name="RightTabControl"></TabControl>
+        <TabControl DockPanel.Dock="Left" MinWidth="150" x:Name="LeftTabControl">
+            
+        </TabControl>
+        <TabControl DockPanel.Dock="Right" MinWidth="150" x:Name="RightTabControl" Width="356"></TabControl>
         <StatusBar DockPanel.Dock="Bottom" MinHeight="40" x:Name="MainStatusBar" Background="#FFB5CFCB" Height="10" RenderTransformOrigin="0.5,0.5">
             <StatusBar.RenderTransform>
                 <TransformGroup>

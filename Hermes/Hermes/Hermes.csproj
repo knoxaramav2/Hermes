@@ -6,4 +6,18 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="config\localenv.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="projects\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="config\localenv.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
