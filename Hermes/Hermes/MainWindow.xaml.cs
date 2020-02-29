@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Reflection;
 using System.Xml;
 using System.Windows.Media;
+using Hermes.projects;
 
 namespace Hermes
 {
@@ -27,10 +28,18 @@ namespace Hermes
         private Canvas _canvas;
         private Window _window;
 
+        //State
+        private MapManager _mapManager;
+        private ProjectManager _projectManager;
+
         public MainWindow()
         {
             InitializeComponent();
             BindComponents();
+
+            _mapManager = new MapManager();
+            _projectManager = new ProjectManager();
+
             ProjectFileHandler.ValidateFileStructure();
             ProjectFileHandler.LoadConfigData();
         }
@@ -64,7 +73,18 @@ namespace Hermes
             var res = dialog.ShowDialog();
             if (res == true)
             {
-
+                if (Directory.Exists(dialog.FileName))
+                {
+                    var msg = "Project already exists";
+                    var caption = "Unable to create projects";
+                    var btn = MessageBoxButton.OK;
+                    var icon = MessageBoxImage.Error;
+                    MessageBox.Show(msg, caption, btn, icon);
+                } else
+                {
+                    _projectManager.NewProject(dialog.FileName);
+                    _window.Title = _projectManager.GetProjectName();
+                }
             }
         }
 
@@ -80,7 +100,8 @@ namespace Hermes
             var res = dialog.ShowDialog();
             if (res == true)
             {
-
+                _projectManager.LoadProject(dialog.FileName);
+                _window.Title = _projectManager.GetProjectName();
             }
         }
 
@@ -142,11 +163,6 @@ namespace Hermes
 
             item.Content = stackPanel;
             listView.Items.Add(item);
-            //tabItem.Content = listView;
-
-            //_leftTabControl.Items.Add(tabItem);
-
-
         }
 
         public void DeleteCurrentMap(object sender, RoutedEventArgs e)
