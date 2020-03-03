@@ -15,12 +15,6 @@ namespace Hermes.projects
             _project = null;
         }
 
-        public string GetProjectTitle()
-        {
-            if (_project == null) return "";
-            return _project.ProjectName;
-        }
-
         public void NewProject(string name)
         {            
             ProjectFileHandler.CreateProjectDirectories(name);
@@ -60,7 +54,7 @@ namespace Hermes.projects
             ++_project.MapCounter;
         }
 
-        public void SetMapCounter(uint val)
+        public static void SetMapCounter(uint val)
         {
             if (_project == null) { return; }
 
@@ -76,6 +70,7 @@ namespace Hermes.projects
         {
             return _project == null ? 0 : _project.MapCounter;
         }
+
     }
 
     //Represents high level info about projects

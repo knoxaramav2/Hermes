@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -40,7 +41,7 @@ namespace Hermes
 
             foreach (FileInfo file in dirInfo.GetFiles())
             {
-                if (file.Extension.ToLower() != "map") { continue; }
+                if (file.Extension.ToLower() != ".map") { continue; }
 
                 var json = File.ReadAllText(file.FullName);
                 var map = JsonConvert.DeserializeObject<MapInfo>(json);
@@ -52,6 +53,7 @@ namespace Hermes
             }
 
             _mapIdCounter = maxMapIndex;
+            ProjectManager.SetMapCounter(_mapIdCounter);
         }
 
         //TODO handle file not found
@@ -119,8 +121,22 @@ namespace Hermes
 
         public bool SelectMap(uint id)
         {
+            if (!_maps.TryGetValue(id, out MapInfo map))
+            {
+                return false;
+            }
+
+            _currentMap = map;
 
             return true;
+        }
+
+        public System.Collections.ObjectModel
+            .ReadOnlyCollection<KeyValuePair<uint, MapInfo>>  GetMapsAsList()
+        {
+            var list = _maps.ToList();
+
+            return list.AsReadOnly();
         }
     }
 

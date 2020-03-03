@@ -53,12 +53,12 @@
             </TabItem>
             <TabItem Header="Maps">
                 <ListView>
-                    <ListViewItem>
+                    <!--<ListViewItem>
                         <StackPanel Orientation="Horizontal">
                             <Button HorizontalAlignment="Stretch" Width="110" MaxWidth="130" >Test</Button>
                             <Button Width="20" Margin="3 0 0 0" Background="#FF0000">-</Button>
                         </StackPanel>
-                    </ListViewItem>
+                    </ListViewItem>-->
                 </ListView>
             </TabItem>
         </TabControl>

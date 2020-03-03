@@ -38,7 +38,7 @@ namespace Hermes
             InitializeComponent();
             BindComponents();
 
-            _mapManager = new MapManager();
+            //_mapManager = new MapManager();
             _projectManager = new ProjectManager();
 
             LockComponents(GuiLockMode.LOCK_NO_PROJECT);
@@ -53,7 +53,7 @@ namespace Hermes
             string mapName = "";
             if (map != null) { mapName = " - "+map.Name; }
 
-            _window.Title = $"{_projectManager.GetProjectTitle()} {mapName}";
+            _window.Title = $"{ProjectManager.GetProjectName()} {mapName}";
         }
 
         public void SerializeControls()
@@ -73,16 +73,43 @@ namespace Hermes
 
         private void LockComponents(GuiLockMode mode)
         {
+            var fileMenu = (MenuItem) _menu.FindName("FileMenu");
+            var settingsMenu = (MenuItem)_menu.FindName("SettingsMenu");
+            var editMenu = (MenuItem)_menu.FindName("EditMenu");
+            var toolsMenu = (MenuItem)_menu.FindName("ToolsMenu");
+            var viewMenu = (MenuItem)_menu.FindName("ViewMenu");
+            var helpMenu = (MenuItem)_menu.FindName("HelpMenu");
+
+
             switch (mode)
             {
                 case GuiLockMode.LOCK_ALL:
-
+                    fileMenu.IsEnabled = false;
+                    settingsMenu.IsEnabled = false;
+                    editMenu.IsEnabled = false;
+                    toolsMenu.IsEnabled = false;
+                    viewMenu.IsEnabled = false;
+                    helpMenu.IsEnabled = false;
                     break;
                 case GuiLockMode.UNLOCK_ALL:
+                    fileMenu.IsEnabled = true;
+                    settingsMenu.IsEnabled = true;
+                    editMenu.IsEnabled = true;
+                    toolsMenu.IsEnabled = true;
+                    viewMenu.IsEnabled = true;
+                    helpMenu.IsEnabled = true;
 
+                    ((MenuItem)fileMenu.FindName("FileSaveProj")).IsEnabled = true;
                     break;
                 case GuiLockMode.LOCK_NO_PROJECT:
+                    fileMenu.IsEnabled = true;
+                    settingsMenu.IsEnabled = true;
+                    editMenu.IsEnabled = false;
+                    toolsMenu.IsEnabled = false;
+                    viewMenu.IsEnabled = true;
+                    helpMenu.IsEnabled = true;
 
+                    ((MenuItem)fileMenu.FindName("FileSaveProj")).IsEnabled=false;
                     break;
             }
         }
@@ -113,6 +140,7 @@ namespace Hermes
                 {
                     _projectManager.NewProject(dialog.FileName);
                     UpdateWindowTitle();
+                    LockComponents(GuiLockMode.UNLOCK_ALL);
                 }
             }
         }
@@ -132,6 +160,13 @@ namespace Hermes
                 _projectManager.LoadProject(dialog.FileName);
                 _mapManager = new MapManager();
                 UpdateWindowTitle();
+                LockComponents(GuiLockMode.UNLOCK_ALL);
+
+                var mapList = _mapManager.GetMapsAsList();
+                foreach(var pair in mapList)
+                {
+                    SpawnMapItem(pair.Value.Name, pair.Key);
+                }
             }
         }
 
@@ -160,14 +195,22 @@ namespace Hermes
         /***    Edit   ***/
         public void CreateNewMap(object sender, RoutedEventArgs e)
         {
-            var tabItem = (TabItem)_leftTabControl.Items.GetItemAt(1);
 
             //TODO Defaults file
             var id = _mapManager.NewMap("New Map", 50, 50);
             //_projectManager.SetMapCounter(_mapManager.GetCurrentMap().MapId);
             _projectManager.IncrementMapCounter();
+            _mapManager.SelectMap(id);
 
-            var listView = (ListView) tabItem.Content;
+            SpawnMapItem("New Map", id);
+            LoadMap();
+        }
+
+        void SpawnMapItem(string name, uint id)
+        {
+            var tabItem = (TabItem)_leftTabControl.Items.GetItemAt(1);
+
+            var listView = (ListView)tabItem.Content;
             var item = new ListViewItem();
             var stackPanel = new StackPanel()
             {
@@ -176,22 +219,22 @@ namespace Hermes
 
             var viewButton = new Button()
             {
-                Content="New Map",
-                HorizontalAlignment=HorizontalAlignment.Stretch,
-                Width=110,
-                MaxWidth=130,
-                CommandParameter=$"{_mapManager.GetCurrentMap().MapId}"
+                Content = name,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Width = 110,
+                MaxWidth = 130,
+                CommandParameter = $"{_mapManager.GetCurrentMap().MapId}"
             };
 
             viewButton.Click += new RoutedEventHandler(SwitchToMap);
 
             var delButton = new Button()
             {
-                Content="-",
-                Width=20,
-                Background=Brushes.Red,
+                Content = "-",
+                Width = 20,
+                Background = Brushes.Red,
                 Margin = new Thickness(3, 0, 0, 0),
-                CommandParameter = $"{_mapManager.GetCurrentMap().MapId}"
+                CommandParameter = $"{id}"
             };
 
             delButton.Click += new RoutedEventHandler(DeleteCurrentMap);
@@ -201,9 +244,6 @@ namespace Hermes
 
             item.Content = stackPanel;
             listView.Items.Add(item);
-
-            _mapManager.SelectMap(id);
-            LoadMap();
         }
 
         public void DeleteCurrentMap(object sender, RoutedEventArgs e)
