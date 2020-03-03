@@ -10,35 +10,36 @@
         Background="Beige">
     <DockPanel>
         <Menu DockPanel.Dock="Top"
-              Background="DarkGray">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New" Click="NewProject"/>
-                <MenuItem Header="_Open" Click="OpenProject"/>
-                <MenuItem Header="_Save" Click="SaveProject"/>
+              Background="DarkGray"
+              x:Name="TopMenu">
+            <MenuItem Header="_File" x:Name="FileMenu">
+                <MenuItem Header="_New" Click="NewProject" x:Name="FileNewProj"/>
+                <MenuItem Header="_Open" Click="OpenProject" x:Name="FileOpenProj"/>
+                <MenuItem Header="_Save" Click="SaveProject" x:Name="FileSaveProj"/>
                 <Separator />
-                <MenuItem Header="_Exit" Click="ExitApplication"/>
+                <MenuItem Header="_Exit" Click="ExitApplication" x:Name="FileExit"/>
             </MenuItem>
-            <MenuItem Header="_Settings">
+            <MenuItem Header="_Settings" x:Name="SettingsMenu">
                 <MenuItem Header="_Configure Project">
 
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Edit">
+            <MenuItem Header="_Edit" x:Name="EditMenu">
                 <MenuItem Header="New Map" Click="CreateNewMap"/>
                 <MenuItem Header="Delete Map" Click="DeleteCurrentMap"/>
             </MenuItem>
-            <MenuItem Header="_Tools">
+            <MenuItem Header="_Tools" x:Name="ToolsMenu">
                 <MenuItem Header="_Editors"/>
                 <Separator/>
                 <MenuItem Header="_Build"/>
             </MenuItem>
-            <MenuItem Header="_View">
+            <MenuItem Header="_View" x:Name="ViewMenu">
                 <MenuItem Header="_Resources">
                     <MenuItem Header="Palletes" IsCheckable="True" />
                     <MenuItem Header="Sprites" IsCheckable="True"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Help">
+            <MenuItem Header="_Help" x:Name="HelpMenu">
                 <MenuItem Header="_About Hermes"/>
                 <MenuItem Header="_Documentation"/>
             </MenuItem>

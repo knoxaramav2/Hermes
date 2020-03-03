@@ -4,34 +4,64 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Hermes
 {
     //Provides methods for interacting with map information
     //and disk operations
-    class MapManager
+    public class MapManager
     {
-        private List<MapInfo> _maps;
+        private Dictionary<uint, MapInfo> _maps;
         private MapInfo _currentMap;
         private uint _mapIdCounter;
 
         public MapManager()
         {
-            _maps = new List<MapInfo>();
+            _maps = new Dictionary<uint, MapInfo>();
             _currentMap = null;
+            _mapIdCounter = 0;
+
+            RefreshMapFiles();
+        }
+
+        private void RefreshMapFiles()
+        {
+            if (ProjectManager.GetProjectName() == null) { return; }
+
+            _maps = new Dictionary<uint, MapInfo>();
+
+            var dir = ProjectFileHandler.GetFormattedUserSpacePath("maps", true);
+            if (dir == null) { return; }
+
+            var dirInfo = new DirectoryInfo(dir);
+
+            uint maxMapIndex = 0;
+
+            foreach (FileInfo file in dirInfo.GetFiles())
+            {
+                if (file.Extension.ToLower() != "map") { continue; }
+
+                var json = File.ReadAllText(file.FullName);
+                var map = JsonConvert.DeserializeObject<MapInfo>(json);
+                _maps.Add(map.MapId, map);
+                
+                if (map.MapId > maxMapIndex) { maxMapIndex = map.MapId; }
+
+                _currentMap = map;
+            }
+
+            _mapIdCounter = maxMapIndex;
         }
 
         //TODO handle file not found
-        public void LoadMapData(string mapId)
+        public bool LoadMapData(uint mapId)
         {
-            foreach(var map in _maps)
-            {
-                if (map.MapId == mapId)
-                {
-                    map.Load(mapId);
-                    return;
-                }
-            }
+            _maps.TryGetValue(mapId, out MapInfo map);
+
+            if (map==null) { return false; }
+            map.Load(map.MapId.ToString());
+            return true;
         }
 
         public void SaveMapData()
@@ -40,30 +70,65 @@ namespace Hermes
             _currentMap.Save();
         }
 
-        public void NewMap(string name, ushort width, ushort height)
+        public void SaveAllMapData()
         {
-            var path = ProjectFileHandler.GetFormattedUserSpacePath(@$"projects\\{1}\\maps");
+            if (_currentMap == null) { return; }
+
+            var eMaps = _maps.GetEnumerator();
+            while (eMaps.MoveNext())
+            {
+                eMaps.Current.Value.Save();
+            }
+        }
+
+        public uint NewMap(string name, ushort width, ushort height)
+        {
+
             var map = new MapInfo()
             {
                 Name = name,
                 Width = width,
                 Height = height,
+                MapId = _mapIdCounter++
             };
 
             map.Save();
+
+            return map.MapId;
         }
         
-        public void DeleteMap()
+        public bool DeleteMap(string id=null)
+        {
+            if (id == null && _currentMap == null)
+            {
+                return false;
+            } else
+            {
+
+            }
+
+            var path = ProjectFileHandler.GetFormattedUserSpacePath(@$"projects\\{id}\\maps");
+
+            return true;
+        }
+
+        public MapInfo GetCurrentMap()
+        {
+            return _currentMap;
+        }
+
+        public bool SelectMap(uint id)
         {
 
+            return true;
         }
     }
 
     //TODO hide public setters
-    class MapInfo : Serializeable
+    public class MapInfo : Serializeable
     {
         public string Name { get; set; }
-        public string MapId { get; set; }
+        public uint MapId { get; set; }
 
         public ushort Width { get; set; }
         public ushort Height { get; set; }
@@ -82,14 +147,14 @@ namespace Hermes
 
         public void Save()
         {
-            var path = GetMapPath(MapId);
+            var path = GetMapPath(MapId.ToString());
             var json = JsonConvert.SerializeObject(this);
             File.WriteAllText(path, json);
         }
 
         private string GetMapPath(string id)
         {
-            return ProjectFileHandler.GetFormattedUserSpacePath($@"\\maps\\{id}.map");
+            return ProjectFileHandler.GetFormattedUserSpacePath($@"\maps\{id}.map", true);
         }
     }
 }

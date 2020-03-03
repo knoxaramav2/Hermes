@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hermes.projects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,10 +76,22 @@ namespace Hermes
             //Directory.CreateDirectory(originDir+path);
         }
 
-        public static string GetFormattedUserSpacePath(string dir)
+        public static string GetFormattedUserSpacePath(string dir, bool useCurrentProject=false)
         {
             string workingDirectory = Environment.CurrentDirectory;
-            return Directory.GetParent(workingDirectory).Parent.Parent.FullName+@$"\{dir}";
+            string path;
+            if (useCurrentProject)
+            {
+                var prjName = ProjectManager.GetProjectName();
+                if (prjName == null) { return null; }
+                path = Directory.GetParent(workingDirectory).Parent.Parent.FullName + @$"\projects\{prjName}\{dir}";
+            }
+            else
+            {
+                path = Directory.GetParent(workingDirectory).Parent.Parent.FullName + @$"\{dir}";
+            }
+
+            return path;
         }
     }
 }

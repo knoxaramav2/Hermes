@@ -15,6 +15,12 @@ namespace Hermes.projects
             _project = null;
         }
 
+        public string GetProjectTitle()
+        {
+            if (_project == null) return "";
+            return _project.ProjectName;
+        }
+
         public void NewProject(string name)
         {            
             ProjectFileHandler.CreateProjectDirectories(name);
@@ -30,6 +36,15 @@ namespace Hermes.projects
 
         public bool LoadProject(string name)
         {
+            //var json = File.ReadAllText(name);
+            var stream = new StreamReader(name);
+            var jtr = new JsonTextReader(stream);
+            var jsr = new JsonSerializer();
+            var info = jsr.Deserialize<ProjectInfo>(jtr);
+
+            if (info == null) { return false; }
+            _project = info;
+
             return true;
         }
 
@@ -42,23 +57,22 @@ namespace Hermes.projects
 
         public void IncrementMapCounter()
         {
-            if (_project == null)
-            {
-                ++_project.MapCounter;
-                _project.Save();
-            } else
-            {
-                return;
-            }
+            ++_project.MapCounter;
         }
 
+        public void SetMapCounter(uint val)
+        {
+            if (_project == null) { return; }
 
-        public string GetProjectName()
+            _project.MapCounter = val;
+        }
+
+        public static string GetProjectName()
         {
             return _project == null ? null : _project.ProjectName;
         }
 
-        public uint GetMapCounter()
+        public static uint? GetMapCounter()
         {
             return _project == null ? 0 : _project.MapCounter;
         }
@@ -68,8 +82,8 @@ namespace Hermes.projects
     class ProjectInfo : Serializeable
     {
         
-        public string ProjectName { get; internal set; }
-        public uint MapCounter {get; internal set; }
+        public string ProjectName { get; set; }
+        public uint MapCounter {get; set; }
 
         public void Load(string name)
         {
